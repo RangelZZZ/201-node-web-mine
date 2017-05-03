@@ -21,9 +21,8 @@ export default class ItemController {
       }
       if (!doc) {
         res.sendStatus(constant.httpCode.NOT_FOUND);
-      } else {
-        res.status(constant.httpCode.OK).send(doc);
       }
+      res.status(constant.httpCode.OK).send(doc);
     });
   }
 
@@ -40,15 +39,28 @@ export default class ItemController {
 
   update(req, res, next) {
 
-    Item.findByIdAndUpdate(req.params.id, req.body,(err,doc)=>{
-      if(err){
+    Item.findByIdAndUpdate(req.params.id, req.body, (err, doc)=> {
+      if (err) {
         return next(err)
       }
-      if(!doc){
+      if (!doc) {
         res.sendStatus(constant.httpCode.NOT_FOUND);
-      }else{
-        res.sendStatus(constant.httpCode.NO_CONTENT);
       }
+      res.sendStatus(constant.httpCode.NO_CONTENT);
+
+    })
+  }
+
+  delete(req, res, next) {
+    Item.findByIdAndRemove(req.params.id, (err, doc)=> {
+      if (err) {
+        return next(err);
+      }
+      if (!doc) {
+        res.sendStatus(constant.httpCode.NOT_FOUND);
+      }
+      res.sendStatus(constant.httpCode.NO_CONTENT);
+
     })
   }
 

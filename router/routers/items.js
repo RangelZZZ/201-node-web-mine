@@ -9,4 +9,6 @@ router.get('/', itemCtrl.getAll);
 router.get('/:id', itemCtrl.getOne);
 router.post('/', itemCtrl.create);
 router.put('/:id', itemCtrl.update);
+router.delete('/:id', itemCtrl.delete);
+
 export default router;
