@@ -1,15 +1,28 @@
+const async = require("async");
 const Item = require("../model/item");
 const constant = require("../config/constant");
 
 export default class ItemController {
   getAll(req, res, next) {
-    Item.find({}, (err, docs)=> {
+    async.waterfall([
+      (done)=> {
+        Item.find({}, (err, doc)=> {
+          if (err) {
+            return next(err);
+          }
+          done(null, doc);
+        })
+      }, (doc, done)=> {
+        Item.count((err, count)=> {
+          done(null, {item: doc, count: count})
+        })
+      }], (err, data)=> {
       if (err) {
         return next(err);
-      } else {
-        res.status(constant.httpCode.OK).send(docs);
       }
-    });
+      res.status(constant.httpCode.OK).send(data);
+
+    })
   }
 
   getOne(req, res, next) {
