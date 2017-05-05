@@ -6,15 +6,15 @@ export default class ItemController {
   getAll(req, res, next) {
     async.waterfall([
       (done)=> {
-        Item.find({}, (err, doc)=> {
+        Item.find({}).populate('category').exec((err, doc)=> {
           if (err) {
             return next(err);
           }
           done(null, doc);
-        })
+        });
       }, (doc, done)=> {
         Item.count((err, count)=> {
-          done(null, {item: doc, count: count})
+          done(null, {items: doc, totalCount: count})
         })
       }], (err, data)=> {
       if (err) {
@@ -28,15 +28,15 @@ export default class ItemController {
   getOne(req, res, next) {
     const itemId = req.params.id;
 
-    Item.findById(itemId, (err, doc)=> {
-      if (err) {
-        return next(err)
+    Item.findById(itemId).populate('category').exec((err,doc)=>{
+      if(err){
+        return next(err);
       }
-      if (!doc) {
+      if(!doc){
         res.sendStatus(constant.httpCode.NOT_FOUND);
       }
       res.status(constant.httpCode.OK).send(doc);
-    });
+    })
   }
 
   create(req, res, next) {
