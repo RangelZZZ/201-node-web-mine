@@ -9,6 +9,7 @@ router.post('/', categoryCtrl.create);
 router.get('/:id', categoryCtrl.getOne);
 router.get('/', categoryCtrl.getAll);
 router.put('/:id', categoryCtrl.update);
+router.delete('/:id', categoryCtrl.delete);
 
 
 module.exports = router;

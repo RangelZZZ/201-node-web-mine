@@ -75,4 +75,16 @@ export default class CategoryController {
       res.sendStatus(constant.httpCode.NO_CONTENT);
     })
   }
+
+  delete(req, res, next) {
+    Category.findByIdAndRemove(req.params.id, (err, doc)=> {
+      if (err) {
+        return next(err)
+      }
+      if (!doc) {
+        res.sendStatus(constant.httpCode.NOT_FOUND);
+      }
+      res.sendStatus(constant.httpCode.NO_CONTENT);
+    })
+  }
 }
