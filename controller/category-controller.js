@@ -4,30 +4,14 @@ const constant = require("../config/constant");
 
 export default class CategoryController {
   create(req, res, next) {
-    async.waterfall([(done)=> {
-      const data = req.body;
-      Category.findOne({name: data.name}, (err, doc)=> {
-        if (err) {
-          return next(err);
-        }
-        if (doc.length !== 0) {
-          return res.sendStatus(constant.httpCode.DUPLICATE_CONTENT);
-        }
-        done(null, data);
-      })
-    }, (data, done)=> {
-      Category.create(data, (err, doc)=> {
-        if (err) {
-          return next(err);
-        }
-        done(err, doc);
-      })
-    }], (err, doc)=> {
+    const data = req.body;
+
+    Category.create(data, (err, doc)=> {
       if (err) {
         return next(err);
       }
       res.status(constant.httpCode.CREATED).send({"categoryUri": `categories/${doc._id}`});
-    })
+    });
   }
 
   getOne(req, res, next) {
@@ -56,6 +40,7 @@ export default class CategoryController {
         done(null, {categories: doc, totalCount: count});
       })
     }], (err, data)=> {
+      console.log(data);
       if (err) {
         return next(err);
       }
