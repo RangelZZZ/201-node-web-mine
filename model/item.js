@@ -10,8 +10,6 @@ const itemSchema = new Schema({
     type: Schema.ObjectId,
     ref: "Category"
   }
-
-
 });
 
 module.exports = mongoose.model("Item", itemSchema);
