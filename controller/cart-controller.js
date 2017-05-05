@@ -25,7 +25,7 @@ export default class cartController {
           return next(err);
         }
         let carts = docs.map(doc=> {
-          let cart = doc.toJSON();    //为什么是toJSON
+          let cart = doc.toJSON();
           cart.items = mapItemToUri(cart.items);
           return cart;
         });
@@ -45,4 +45,47 @@ export default class cartController {
       res.status(constant.httpCode.OK).send(data);
     })
   }
+
+  getOne(req, res, next) {
+    const cartId = req.params.id;
+
+    Cart.findById(cartId, (err, doc)=> {
+      if (err) {
+        return next(err);
+      }
+      if (!doc) {
+        res.sendStatus(constant.httpCode.NOT_FOUND);
+      }
+      let data = doc.toJSON();
+      let items = doc.items;
+      data.items = mapItemToUri(items);
+      res.status(constant.httpCode.OK).send(doc);
+    });
+  }
+
+  update(req, res, next) {
+    Cart.findByIdAndUpdate(req.params.id, req.body, (err, doc)=> {
+      if (err) {
+        return next(err);
+      }
+      if (!doc) {
+        res.sendStatus(constant.httpCode.NOT_FOUND);
+      }
+      res.sendStatus(constant.httpCode.NO_CONTENT);
+    })
+  }
+
+  delete(req, res, next) {
+    Cart.findByIdAndRemove(req.params.id, (err, doc)=> {
+      if (err) {
+        return next(err)
+      }
+      if (!doc) {
+        res.sendStatus(constant.httpCode.NOT_FOUND);
+      }
+      res.sendStatus(constant.httpCode.NO_CONTENT);
+    })
+  }
+
+
 }
