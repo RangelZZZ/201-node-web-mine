@@ -10,6 +10,7 @@ router.get('/:id', categoryCtrl.getOne);
 router.get('/', categoryCtrl.getAll);
 router.put('/:id', categoryCtrl.update);
 router.delete('/:id', categoryCtrl.delete);
+router.get('/:id/items', categoryCtrl.getItemsByCategoryId);
 
 
 module.exports = router;

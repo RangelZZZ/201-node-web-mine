@@ -1,6 +1,7 @@
 const async = require("async");
 const Category = require("../model/category");
 const constant = require("../config/constant");
+const Item = require("../model/item");
 
 export default class CategoryController {
   create(req, res, next) {
@@ -72,4 +73,28 @@ export default class CategoryController {
       res.sendStatus(constant.httpCode.NO_CONTENT);
     })
   }
+
+  getItemsByCategoryId(req, res, next) {
+    async.waterfall([(done)=> {
+      Item.find({category: req.params.id}).populate('category').exec((err, doc)=> {
+        if (err) {
+          return next(err);
+        }
+        done(null, doc)
+      });
+    }, (doc, done)=> {
+      Item.count({category: req.params.id}, (err, count)=> {
+        if (err) {
+          return next(err)
+        }
+        done(null, {items: doc, totalCount: count});
+      })
+    }], (err, data)=> {
+      if (err) {
+        return next(err);
+      }
+      res.status(constant.httpCode.OK).send(data);
+    })
+  }
+
 }
